@@ -7,6 +7,9 @@ import (
 
 func main() {
 	var ages = [3]int{20, 25, 30}
+	/* :=dùng để khai báo và khởi tạo biến mới trong cùng một lúc. 
+	không cần chỉ định kiểu dữ liệu của biến vì Go tự động suy luận dựa trên giá trị được gán.
+	*/
 	/* [n]type (với n là số phần tử, type là kiểu dữ liệu). */
 	names := [4]string{"php", "laravel", "nodejs", "reactjs"}
 

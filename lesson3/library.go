@@ -6,7 +6,7 @@ import (
 	"sort"
 )
 
-function main() {
+func main() {
 	greeting := "Hello there varriant";
 
 	// strings

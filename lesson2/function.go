@@ -13,6 +13,10 @@ func sayBye(n string) {
 	fmt.Printf("GoodBye %v \n", n);
 }
 
+/* 
+	range là một từ khóa trong Go, được sử dụng để lặp qua các phần tử của:
+	Mảng (array), Slice, Map, Kênh (channel), Chuỗi (string).
+*/ 
 func cycleNames(n []string, f func(string)) {
 	for _, v := range n {
 		f(v)
