@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 /*
 	structs trong Go, một kiểu dữ liệu được định nghĩa,
@@ -17,10 +20,15 @@ type bill struct {
 func newBill(name string) bill {
 	b := bill {
 		name: name,
-		items: map[string]float64{"pie": 5.99, "cake": 3.99},
+		items: map[string]float64{},
 		tip: 0,
 	}
 	return b;
+}
+
+func (b bill) addItem(name string, price float64) {
+	/* b.items[name] = price chỉ cập nhật bản sao (copy) của mybill.items, không ảnh hưởng đến mybill gốc */
+	b.items[name] = price
 }
 
 func (b *bill) format() string {
@@ -37,11 +45,13 @@ func (b *bill) format() string {
 		total += v
 	}
 
+	fs += fmt.Sprintf("%-25v ... $%0.2f", "tip:", b.tip)
 	// total
-	fs += fmt.Sprintf("%-25v ... $%0.2f", "total:", total)
+	fs += fmt.Sprintf("%-25v ... $%0.2f", "total:", total+b.tip)
 
 	return fs
 }
+
 /* Pointer receiver (*bill) được dùng để thay đổi trực tiếp dữ liệu trong struct hoặc tránh sao chép dữ liệu lớn. */
 /*Hàm này nhận con trỏ của mybill. 
 	Truy cập b.tip thay đổi trực tiếp giá trị tip trong mybill.
@@ -49,14 +59,21 @@ func (b *bill) format() string {
 	+Dấu * trước tên kiểu dữ liệu (bill) chính là biểu hiện cho con trỏ.
 */
 func (b *bill) updateTip(tip float64) {
-	b.tip = tip
+	(*b).tip = tip
 }
 
-func (b bill) addItem(name string, price float64) {
-	/* b.items[name] = price chỉ cập nhật bản sao (copy) của mybill.items, không ảnh hưởng đến mybill gốc */
-	b.items[name] = price
-}
 
+
+//Save bill
+func (b *bill) save() {
+	data := []byte(b.format())
+
+	err := os.WriteFile("bills/"+b.name+".pdf", data, 0644)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("bill was saved to file")
+}
 /* Value receiver (bill) chỉ nên dùng khi:
 Không cần thay đổi dữ liệu gốc.
 Struct có kích thước nhỏ.*/
